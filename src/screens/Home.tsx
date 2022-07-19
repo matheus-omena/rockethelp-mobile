@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { Center, FlatList, Heading, HStack, IconButton, Text, useTheme, VStack } from 'native-base';
 import { ChatTeardropText, SignOut } from 'phosphor-react-native';
 import { useState } from 'react';
@@ -24,7 +25,16 @@ export function Home() {
     }
   ])
 
+  const navigation = useNavigation();
   const { colors } = useTheme();
+
+  function handleNewOrder(){
+    navigation.navigate('new');
+  }
+
+  function handleOpenDetails(id: string){
+    navigation.navigate('details', { orderId: id });
+  }
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -72,7 +82,7 @@ export function Home() {
         <FlatList
           data={orders}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <Order data={item} />}
+          renderItem={({ item }) => <Order data={item} onPress={() => handleOpenDetails(item.id)} />}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 50 }}
           ListEmptyComponent={() => (
@@ -86,7 +96,7 @@ export function Home() {
           )}
         />
 
-        <Button title="Nova solicitação" />
+        <Button title="Nova solicitação" onPress={handleNewOrder}/>
       </VStack>
     </VStack>
   );
